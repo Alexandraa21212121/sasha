@@ -23,7 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        hui
         return view('home');
     }
 }
