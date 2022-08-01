@@ -26,3 +26,13 @@ Route::get('/users', 'UsersController@getAllUsers')->name('user');
 Route::get('/categories', 'CategoriesController@categories')->name('categories');
 
 Route::get('/products', 'ProductsController@products')->name('products');
+
+Route::get('/category/{id}', 'CategoriesController@category')->name('category');
+
+Route::get('/product/{id}', 'ProductsController@product')->name('product');
+
+Route::get('/cart', 'CartController@cart')->name('cart');
+
+Route::get('/cartAdd/{id}', 'CartController@cartAdd')->name('cartAdd');
+
+Route::get('/cartAddAjax/{id}', 'CartController@cartAddAjax')->name('cartAddAjax');

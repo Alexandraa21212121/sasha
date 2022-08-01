@@ -21,10 +21,11 @@ class UsersController extends Controller
 //        $user->email = '43534@gmail.com';
 //        $user->save();
 
-        $user = User::find(6);
-//        $user->is_admin = true;
-//        $user->update();
-
-        dd($user);
+//        $user = User::find(6);
+////        $user->is_admin = true;
+////        $user->update();
+//
+//        dd($user);
+        return view('hui');
     }
 }
