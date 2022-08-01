@@ -35,4 +35,4 @@ Route::get('/cart', 'CartController@cart')->name('cart');
 
 Route::get('/cartAdd/{id}', 'CartController@cartAdd')->name('cartAdd');
 
-Route::get('/cartAddAjax/{id}', 'CartController@cartAddAjax')->name('cartAddAjax');
+Route::get('/cart/addAjax/{id}', 'CartController@cartAddAjax')->name('cartAddAjax');

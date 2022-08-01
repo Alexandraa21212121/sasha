@@ -160,7 +160,17 @@
             $(document).ready(function (){
                 $(".add-to-cart").click(function (){
                     var id = $(this).attr("data-id");
-                    $.post("/cart/addAjax/"+id, {}, function (data){
+                    $.get("/cart/addAjax/"+id, {}, function (data){
+                        $("#cart-count").html(data);
+                    });
+                    return false;
+                });
+                $(".add-to-cart-with-quantity").click(function (){
+                    var id = $(this).attr("data-id");
+                    var quantity = $('input[type="text"]').val();
+                    $.get("/cart/addAjax/"+id, {
+                        quantity: quantity
+                    }, function (data){
                         $("#cart-count").html(data);
                     });
                     return false;

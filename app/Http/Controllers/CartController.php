@@ -7,55 +7,97 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function cartAdd($id)
+    public function cartAdd(Request $request, $id)
     {
-        $id = intval($id);
+        Product::findOrFail($id);
+
         $productsInCart = [];
+        $productExist = false;
 
-        session()->put('products', [
-            'product_id' => 1
-        ]);
-
-        if (session()->has('products')) {
-            $productsInCart = session()->get('products');
+        if ($request->session()->has('products')) {
+            $productsInCart = $request->session()->get('products');
         }
 
-        if (array_key_exists($id, $productsInCart)) {
-            $productsInCart[$id]++;
+        if (!empty($productsInCart))
+        {
+            foreach ($productsInCart as $key => $product) {
+                if ($product['product_id'] == $id)
+                {
+                    $productsInCart[$key]['quantity']++;
+                    $productExist = true;
+                    break;
+                }
+            }
+
+            if(!$productExist){
+                $productsInCart[] = [
+                    'product_id' => $id,
+                    'quantity' => 1
+                ];
+            }
         } else {
-            $productsInCart[$id] = 1;
+            $productsInCart[] = [
+                'product_id' => $id,
+                'quantity' => 1
+            ];
         }
 
-        session()->put('products', $productsInCart);
+        $request->session()->put('products', $productsInCart);
 
         return redirect()->back();
     }
-    public function cartAddAjax($id)
+    public function cartAddAjax(Request $request, $id)
     {
-        $id = intval($id);
+//        $id = intval($id);
+        Product::findOrFail($id);
+        $quantity = $request->get('quantity') ?? 1;
+        $quantity = intval($quantity);
+
         $productsInCart = [];
+        $productExist = false;
 
-        if (session()->has('products')) {
-            $productsInCart = session()-> get('products');
+        if ($request->session()->has('products')) {
+            $productsInCart = $request->session()->get('products');
         }
 
-        if (array_key_exists($id, $productsInCart)) {
-            $productsInCart[$id]++;
+
+        if (!empty($productsInCart))
+        {
+            foreach ($productsInCart as $key => $product) {
+                if ($product['product_id'] == $id)
+                {
+                    $productsInCart[$key]['quantity'] += $quantity;
+
+                    $productExist = true;
+                    break;
+                }
+            }
+
+            if(!$productExist){
+                $productsInCart[] = [
+                    'product_id' => $id,
+                    'quantity' => $quantity
+                ];
+            }
         } else {
-            $productsInCart[$id] = 1;
+            $productsInCart[] = [
+                'product_id' => $id,
+                'quantity' => $quantity
+            ];
         }
-
-        session()->put('products', $productsInCart);
+        $request->session()->put('products', $productsInCart);
 
         return $this->countItems();
     }
+
 
     public function countItems()
     {
         if (session()->has('products')) {
             $count = 0;
-            foreach (session()->get('products') as $id => $quantity) {
-                $count = $count + $quantity;
+
+            foreach (session()->get('products') as $key => $product) {
+                $count = $count + $product['quantity'];
             }
             return $count;
         } else {
